@@ -35,8 +35,8 @@ class FeederSubsystem(StateSubsystem):
                      )
 
 
-    _state_configs: dict[SubsystemState, tuple[int, bool]] = {
-        SubsystemState.STOP: (0, False),
+    _state_configs: dict[SubsystemState, tuple[float]] = {
+        SubsystemState.STOP: (0.0),
     }
 
     def __init__(self, io: FeederIO) -> None:

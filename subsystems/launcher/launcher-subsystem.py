@@ -25,14 +25,15 @@ class LauncherSubsystem(StateSubsystem):
 
     _motor_config = (TalonFXConfiguration()
                      .with_slot0(Constants.LauncherConstants.GAINS)
-                     .with_motor_output(MotorOutputConfigs().with_neutral_mode(NeutralModeValue.BRAKE))
+                     .with_motor_output(MotorOutputConfigs().with_neutral_mode(NeutralModeValue.COAST))
                      .with_feedback(FeedbackConfigs().with_sensor_to_mechanism_ratio(Constants.LauncherConstants.GEAR_RATIO))
                      .with_current_limits(CurrentLimitsConfigs().with_supply_current_limit_enable(True).with_supply_current_limit(Constants.LauncherConstants.SUPPLY_CURRENT))
                      )
 
 
-    _state_configs: dict[SubsystemState, tuple[int, bool]] = {
-        SubsystemState.STOP: (0, False),
+    _state_configs: dict[SubsystemState, tuple[float]] = {
+        SubsystemState.STOP: (0.0),
+        SubsystemState.LAUNCH: (100.0)
     }
 
     def __init__(self, io: LauncherIO) -> None:
@@ -60,11 +61,11 @@ class LauncherSubsystem(StateSubsystem):
             return
 
         # Get motor voltage for this state
-        motor_voltage = self._state_configs.get(
+        motor_rps = self._state_configs.get(
             desired_state, 
             (0.0)
         )
         
         # Set motor voltage through IO layer
-        self._io.setMotorVoltage(motor_voltage)
+        self._io.setMotorRPS(motor_rps)
 
