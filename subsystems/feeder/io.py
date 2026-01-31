@@ -47,7 +47,7 @@ class FeederIOTalonFX(FeederIO):
     Real hardware implementation using TalonFX motor controller.
     """
 
-    def __init__(self, motor_id: int, motor_config: TalonFXConfiguration) -> None:
+    def __init__(self, motor_id: int) -> None:
         """
         Initialize the real hardware IO.
 
@@ -56,7 +56,13 @@ class FeederIOTalonFX(FeederIO):
         """
         self._motor: Final[TalonFX] = TalonFX(motor_id, "*")
         # Apply motor configuration
-        tryUntilOk(5, lambda: self._motor.configurator.apply(motor_config, 0.25))
+        _motor_config = TalonFXConfiguration()
+
+        _motor_config.slot0 = Constants.FeederConstants.GAINS
+        _motor_config.motor_output.neutral_mode = NeutralModeValue.COAST
+        _motor_config.feedback.sensor_to_mechanism_ratio = Constants.FeederConstants.GEAR_RATIO
+
+        tryUntilOk(5, lambda: self._motor.configurator.apply(_motor_config, 0.25))
         tryUntilOk(5, lambda: self._motor.set_position(0, 0.25))
 
         # Create status signals for motor

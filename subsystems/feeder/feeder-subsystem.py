@@ -25,16 +25,6 @@ class FeederSubsystem(StateSubsystem):
         STOP = auto()
         INWARD = auto()
 
-    _canrange_config = (CANrangeConfiguration().with_proximity_params(ProximityParamsConfigs().with_proximity_threshold(0.1)))
-
-    _motor_config = (TalonFXConfiguration()
-                     .with_slot0(Constants.FeederConstants.GAINS)
-                     .with_motor_output(MotorOutputConfigs().with_neutral_mode(NeutralModeValue.BRAKE))
-                     .with_feedback(FeedbackConfigs().with_sensor_to_mechanism_ratio(Constants.FeederConstants.GEAR_RATIO))
-                     .with_current_limits(CurrentLimitsConfigs().with_supply_current_limit_enable(True).with_supply_current_limit(Constants.FeederConstants.SUPPLY_CURRENT))
-                     )
-
-
     _state_configs: dict[SubsystemState, tuple[float]] = {
         SubsystemState.STOP: (0.0),
     }

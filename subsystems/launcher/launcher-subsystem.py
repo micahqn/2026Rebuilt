@@ -21,16 +21,6 @@ class LauncherSubsystem(StateSubsystem):
         STOP = auto()
         LAUNCH = auto()
 
-    _canrange_config = (CANrangeConfiguration().with_proximity_params(ProximityParamsConfigs().with_proximity_threshold(0.1)))
-
-    _motor_config = (TalonFXConfiguration()
-                     .with_slot0(Constants.LauncherConstants.GAINS)
-                     .with_motor_output(MotorOutputConfigs().with_neutral_mode(NeutralModeValue.COAST))
-                     .with_feedback(FeedbackConfigs().with_sensor_to_mechanism_ratio(Constants.LauncherConstants.GEAR_RATIO))
-                     .with_current_limits(CurrentLimitsConfigs().with_supply_current_limit_enable(True).with_supply_current_limit(Constants.LauncherConstants.SUPPLY_CURRENT))
-                     )
-
-
     _state_configs: dict[SubsystemState, tuple[float]] = {
         SubsystemState.STOP: (0.0),
         SubsystemState.LAUNCH: (100.0)
